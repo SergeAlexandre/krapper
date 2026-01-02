@@ -1,0 +1,70 @@
+# nonk8s
+apiVersion: krapper.kubotal.io/v1alpha1
+kind: Wrap
+
+name: releases
+version: 0.1.0
+description: KuboCD Releases
+
+
+source:
+  apiVersions: kubocd.kubotal.io/v1alpha1
+  kind: Release
+
+operations:
+  view: true
+  create: false
+  update: false
+  delete: false
+
+schema:
+  valuePath: ".spec."
+  fields:
+    - name: name
+      required: true
+      label: Name
+      readOnly: true
+      string:
+        value: ".metadata.name"
+    - name: description
+    - name: status
+      readOnly: true
+      string:
+        value: ".status.phase"
+    - name: package
+      object:
+        fields:
+          - name: repository
+            readOnly: true
+          - name: tag
+          - name: timeout
+            duration: {}
+          - name: interval
+            duration: {}
+        inList:
+          alignment: left
+          value: ".spec.package.repository + ':' + .spec.package.tag"
+    - name: createNamespace
+      readOnly: true
+      boolean: {}
+
+
+template: |
+  ---
+  apiVersion: kubocd.kubotal.io/v1alpha1
+  kind: Release
+    name: "{{ .Fields.login }}"
+    namespace: "{{ .Metadata.namespace }}"
+  spec:
+    {{- with .Fields.description }}
+    description: {{ . }}
+    {{- end }}
+    {{- with .Fields.package }}
+    package:
+      interval: {{ .interval }}
+      timeout: {{ .timeout }}
+    {{- end }}
+  
+
+
+

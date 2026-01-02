@@ -1,0 +1,89 @@
+apiVersion: krapper.kubotal.io/v1alpha1
+kind: Wrap
+
+name: users
+version: 0.1.0
+description: Kubauth local users
+
+source:
+  apiVersions: kubauth.kubotal.io/v1alpha1
+  kind: User
+
+operations:
+  view: true
+  create: true
+  update: true
+  delete: true
+
+
+schema:
+  valuePath: ".spec."
+  fields:
+    - name: login
+      required: true
+      label: Login
+      string:
+        value: "resource.metadata.name"
+    - name: name
+      required: false
+      label: Full name
+      string:
+    - name: emails
+      array:
+        item:
+          validation:
+            test: "self.matches('^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$')"
+            message: "Invalid email address"
+          string: {}
+    - name: passwordHash
+      required: false
+      label: "Password hash"
+    - name: uid
+      integer:
+    - name: comment
+      string:
+    - name: claims
+      string:
+        width: 40
+        height: 2
+      validation:
+        test: "self.isYaml()"
+        message: "Claims must be a valid yaml snippet"
+    - name: disabled
+      boolean: {}
+
+
+template: |
+  apiVersion: kubauth.kubotal.io/v1alpha1
+  kind: User
+    name: {{ .Fields.login }}
+    namespace: {{ .Metadata.namespace }}
+  spec:
+    name: {{ .Fields.name }}
+    {{- with .Fields.emails }}
+    {{- range . }}
+      - {{ . }}  
+    {{- end }}
+    {{- end }}
+    {{- with .Fields.passwordHash }}
+    passwordHash: {{ . }}
+    {{- end }}
+    {{- with .Fields.uid }}
+    uid: {{ . }}
+    {{- end }}
+    {{- with .Fields.comment }}
+    comment: {{ . }}
+    {{- end }}
+    {{- with .Fields.claims }}
+    claims: 
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- with .Fields.disabled }}
+    disabled: {{ . }}
+    {{- end }}
+    
+    
+
+
+
+

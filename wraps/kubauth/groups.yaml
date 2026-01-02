@@ -1,0 +1,58 @@
+# nonk8s
+apiVersion: krapper.kubotal.io/v1alpha1
+kind: Wrap
+
+name: groups
+version: 0.1.0
+description: Kubauth local groups
+
+
+source:
+  apiVersions: kubauth.kubotal.io/v1alpha1
+  kind: Group
+
+operations:
+  view: true
+  create: true
+  update: true
+  delete: true
+
+schema:
+  valuePath: ".spec."
+  fields:
+    - name: name
+      required: true
+      label: Name
+      string:
+        value: "resource.metadata.name"
+    - name: comment
+      string:
+    - name: claims
+      string:
+        width: 40
+        height: 2
+      validation:
+        test: "self.isYaml()"
+        message: "Claims must be a valid yaml snippet"
+
+
+template: |
+  ---
+  apiVersion: kubauth.kubotal.io/v1alpha1
+  kind: Group
+    name: "{{ .Fields.login }}"
+    namespace: "{{ .Metadata.namespace }}"
+  spec:
+    {{- with .Fields.comment }}
+    comment: {{ . }}
+    {{- end }}
+    {{- with .Fields.claims }}
+    claims: 
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    
+    
+
+
+
+
