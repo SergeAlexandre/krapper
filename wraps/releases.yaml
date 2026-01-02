@@ -6,6 +6,7 @@ name: releases
 version: 0.1.0
 description: KuboCD Releases
 
+menuMode: grid
 
 source:
   apiVersions: kubocd.kubotal.io/v1alpha1

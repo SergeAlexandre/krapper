@@ -6,6 +6,7 @@ name: groups
 version: 0.1.0
 description: Kubauth local groups
 
+menuMode: subMenu
 
 source:
   apiVersions: kubauth.kubotal.io/v1alpha1

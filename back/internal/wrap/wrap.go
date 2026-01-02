@@ -10,11 +10,17 @@ type Cel string
 type UiComponent string
 type Alignment string
 type WrTemplate string
+type MenuMode string
 
 const (
 	leftAlign   Alignment = "left"
 	centerAlign Alignment = "center"
 	rightAlign  Alignment = "right"
+)
+
+const (
+	gridMode    MenuMode = "grid"    // Entities as grid in main pane
+	subMenuMode MenuMode = "subMenu" // Entities as subMenu. Selected one in view mode
 )
 
 type Wrap struct {
@@ -30,8 +36,9 @@ type Wrap struct {
 	Label string `yaml:"label" json:"label"`
 	// optional
 	Description string `yaml:"description,omitempty" json:"description,omitempty"`
+	// Required
+	MenuMode MenuMode `yaml:"menuMode,omitempty" json:"menuMode,omitempty"`
 
-	// One and only one of next 3 must be defined
 	Source struct {
 		// Required
 		ApiVersions string `yaml:"apiVersions" json:"apiVersions"`
@@ -55,8 +62,7 @@ type Wrap struct {
 		Fields     []Field     `yaml:"fields,omitempty" json:"fields,omitempty"`
 	} `yaml:"schema" json:"schema"`
 
-	Template     WrTemplate `yaml:"template,omitempty" json:"template,omitempty"`
-	TemplateFile string     `yaml:"templateFile,omitempty" json:"templateFile,omitempty"`
+	Template WrTemplate `yaml:"template,omitempty" json:"template,omitempty"`
 }
 
 var _ valuePathProvider = &Wrap{}
@@ -81,6 +87,13 @@ func (w *Wrap) Groom() error {
 	if w.Label == "" {
 		w.Label = misc.Labelize(w.Name)
 	}
+	if w.MenuMode == "" {
+		return fmt.Errorf("menuMode is required")
+	}
+	if !validMenuModes[w.MenuMode] {
+		return fmt.Errorf("invalid menuMode: %s", w.MenuMode)
+	}
+
 	if w.Source.ApiVersions == "" {
 		return fmt.Errorf("no apiVersions defined for source")
 	}
@@ -102,6 +115,11 @@ func (w *Wrap) Groom() error {
 		}
 	}
 	return nil
+}
+
+var validMenuModes = map[MenuMode]bool{
+	gridMode:    true,
+	subMenuMode: true,
 }
 
 type Validation struct {

@@ -4,6 +4,9 @@ kind: Wrap
 name: users
 version: 0.1.0
 description: Kubauth local users
+label: Users
+
+menuMode: grid # Or subMenu
 
 source:
   apiVersions: kubauth.kubotal.io/v1alpha1
@@ -14,7 +17,6 @@ operations:
   create: true
   update: true
   delete: true
-
 
 schema:
   valuePath: ".spec."

@@ -49,7 +49,7 @@ var serveCmd = &cobra.Command{
 		logger.Info("Starting krapper server", slog.String("logLevel", serveParams.logConfig.Level), slog.String("version", global.Version), slog.String("build", global.BuildTs))
 
 		// Create and start HTTP server
-		store, err := wrapstore.New(serveParams.wrapsFolder)
+		store, err := wrapstore.New(serveParams.wrapsFolder, logger)
 		if err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "Unable to load wraps from '%s': %v\n", serveParams.wrapsFolder, err)
 			os.Exit(2)
