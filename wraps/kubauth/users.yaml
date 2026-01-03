@@ -16,7 +16,7 @@ operations:
   view: true
   create: true
   update: true
-  delete: true
+  delete: false
 
 schema:
   valuePath: ".spec."
