@@ -42,3 +42,7 @@ Add handlers in back/cmd/serve.go
     Also handle selector and namespace if defined.
     clusterScoped means not namespaced.
 
+
+- Remove the k8s list wrapper and return a list of individual objects.
+- Remove the managedFields attribute.
+

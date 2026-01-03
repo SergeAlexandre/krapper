@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"krapper/internal/global"
 	"krapper/internal/httpsrv"
+	"krapper/internal/k8s"
 	"krapper/internal/misc"
 	"krapper/internal/wrapstore"
 	"log/slog"
@@ -58,11 +59,68 @@ var serveCmd = &cobra.Command{
 		// Inject logger into context
 		ctx := logr.NewContextWithSlogLogger(context.Background(), logger)
 
+		// Initialize K8s client
+		k8sClient, err := k8s.NewClient(logger)
+		if err != nil {
+			logger.Warn("Failed to initialize K8s client. K8s features will be disabled.", "error", err)
+		}
+
 		mux := http.NewServeMux()
 
 		mux.HandleFunc("GET /api/v1/wraps", func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", "application/json")
 			if err := json.NewEncoder(w).Encode(store.GetCatalog()); err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			}
+		})
+
+		mux.HandleFunc("GET /api/v1/wraps/{name}", func(w http.ResponseWriter, r *http.Request) {
+			name := r.PathValue("name")
+			wrap := store.GetWrap(name)
+			if wrap.Name == "" {
+				http.Error(w, "Wrap not found", http.StatusNotFound)
+				return
+			}
+			w.Header().Set("Content-Type", "application/json")
+			if err := json.NewEncoder(w).Encode(wrap); err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			}
+		})
+
+		mux.HandleFunc("GET /api/v1/resources/{name}", func(w http.ResponseWriter, r *http.Request) {
+			name := r.PathValue("name")
+			wrap := store.GetWrap(name)
+			if wrap.Name == "" {
+				http.Error(w, "Wrap not found", http.StatusNotFound)
+				return
+			}
+
+			if k8sClient == nil {
+				http.Error(w, "K8s client not initialized", http.StatusServiceUnavailable)
+				return
+			}
+
+			// Determine namespace
+			ns := wrap.Source.Namespace
+			if wrap.Source.ClusterScoped {
+				ns = "" // Ignore namespace for cluster scoped resources
+			}
+
+			list, err := k8sClient.ListResources(
+				r.Context(),
+				wrap.Source.ApiVersion,
+				wrap.Source.Kind,
+				ns,
+				wrap.Source.Selector,
+			)
+			if err != nil {
+				logger.Error("Failed to list resources", "error", err, "wrap", wrap.Name)
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+
+			w.Header().Set("Content-Type", "application/json")
+			if err := json.NewEncoder(w).Encode(list); err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 			}
 		})
