@@ -42,7 +42,7 @@ Add handlers in back/cmd/serve.go
     Also handle selector and namespace if defined.
     clusterScoped means not namespaced.
 
-
+Small change on the returned GET .../api/v1/resources/{wrap-name} request:
 - Remove the k8s list wrapper and return a list of individual objects.
 - Remove the managedFields attribute.
 

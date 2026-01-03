@@ -119,8 +119,13 @@ var serveCmd = &cobra.Command{
 				return
 			}
 
+			// Clean up resources
+			for i := range list.Items {
+				list.Items[i].SetManagedFields(nil)
+			}
+
 			w.Header().Set("Content-Type", "application/json")
-			if err := json.NewEncoder(w).Encode(list); err != nil {
+			if err := json.NewEncoder(w).Encode(list.Items); err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 			}
 		})
