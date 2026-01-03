@@ -9,7 +9,7 @@ description: Kubauth local groups
 menuMode: subMenu
 
 source:
-  apiVersions: kubauth.kubotal.io/v1alpha1
+  apiVersion: kubauth.kubotal.io/v1alpha1
   kind: Group
 
 operations:

@@ -60,7 +60,7 @@ var serveCmd = &cobra.Command{
 
 		mux := http.NewServeMux()
 
-		mux.HandleFunc("GET /api/v1/catalog", func(w http.ResponseWriter, r *http.Request) {
+		mux.HandleFunc("GET /api/v1/wraps", func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", "application/json")
 			if err := json.NewEncoder(w).Encode(store.GetCatalog()); err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)

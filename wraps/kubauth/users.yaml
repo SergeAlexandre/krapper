@@ -9,7 +9,7 @@ label: Users
 menuMode: grid # Or subMenu
 
 source:
-  apiVersions: kubauth.kubotal.io/v1alpha1
+  apiVersion: kubauth.kubotal.io/v1alpha1
   kind: User
 
 operations:

@@ -47,6 +47,9 @@ version: ## Set version in binary
 build:  version  ## Build binaries with dependencies
 	cd back && CGO_ENABLED=0 go build -o bin/krapper main.go
 
+.PHONY: test
+test:  version  ## Build binaries with dependencies
+	cd back && go test ./...
 
 
 

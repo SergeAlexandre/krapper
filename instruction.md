@@ -28,3 +28,17 @@ FAIL    krapper/internal/httpsrv [build failed]
 FAIL
 ```
 
+Resync with Codebase
+
+Add handlers in back/cmd/serve.go
+
+- GET .../api/v1/wraps/{wrap-name}
+
+    Return a wrap definition
+
+- GET .../api/v1/resources/{wrap-name}
+
+    Retrieve the associated k8s object list. Object is defined by wrap.source.apiVersion/kind
+    Also handle selector and namespace if defined.
+    clusterScoped means not namespaced.
+

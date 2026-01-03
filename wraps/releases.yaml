@@ -9,7 +9,7 @@ description: KuboCD Releases
 menuMode: grid
 
 source:
-  apiVersions: kubocd.kubotal.io/v1alpha1
+  apiVersion: kubocd.kubotal.io/v1alpha1
   kind: Release
 
 operations:

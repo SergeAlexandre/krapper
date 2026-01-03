@@ -24,7 +24,7 @@ name: test-wrap-1
 version: v1
 menuMode: grid
 source:
-  apiVersions: v1
+  apiVersion: v1
   kind: Pod
 `
 	err = os.WriteFile(filepath.Join(tmpDir, "wrap1.yaml"), []byte(wrap1), 0644)
@@ -60,7 +60,7 @@ name: test-wrap-2
 version: v1
 menuMode: subMenu
 source:
-  apiVersions: v1
+  apiVersion: v1
   kind: Service
 `
 	err = os.WriteFile(filepath.Join(tmpDir, "wrap2.yaml"), []byte(wrap2), 0644)
@@ -89,7 +89,7 @@ name: test-wrap-1
 version: v2
 menuMode: grid
 source:
-  apiVersions: v1
+  apiVersion: v1
   kind: Pod
 `
 	err = os.WriteFile(filepath.Join(tmpDir, "wrap1.yaml"), []byte(wrap1Updated), 0644)
@@ -131,7 +131,7 @@ name: test-wrap-3
 version: v1
 menuMode: grid
 source:
-  apiVersions: v1
+  apiVersion: v1
   kind: ConfigMap
 `
 	err = os.WriteFile(filepath.Join(subDir, "wrap3.yaml"), []byte(wrap3), 0644)

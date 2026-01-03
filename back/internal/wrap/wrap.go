@@ -41,7 +41,7 @@ type Wrap struct {
 
 	Source struct {
 		// Required
-		ApiVersions string `yaml:"apiVersions" json:"apiVersions"`
+		ApiVersion string `yaml:"apiVersion" json:"apiVersion"`
 		// Required
 		Kind          string            `yaml:"kind" json:"kind"`
 		Namespace     string            `yaml:"namespace,omitempty" json:"namespace,omitempty"`
@@ -94,8 +94,8 @@ func (w *Wrap) Groom() error {
 		return fmt.Errorf("invalid menuMode: %s", w.MenuMode)
 	}
 
-	if w.Source.ApiVersions == "" {
-		return fmt.Errorf("no apiVersions defined for source")
+	if w.Source.ApiVersion == "" {
+		return fmt.Errorf("no apiVersion defined for source")
 	}
 	if w.Source.Kind == "" {
 		return fmt.Errorf("no kind defined for source")
