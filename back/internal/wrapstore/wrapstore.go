@@ -25,12 +25,12 @@ type Catalog struct {
 
 type WrapStore interface {
 	GetCatalog() *Catalog
-	GetWrap(name string) wrap.Wrap
+	GetWrap(name string) *wrap.Wrap
 }
 
 type store struct {
 	mu      sync.RWMutex
-	wraps   map[string]wrap.Wrap
+	wraps   map[string]*wrap.Wrap
 	catalog *Catalog
 	files   map[string]string // filePath -> wrapName
 	watcher *fsnotify.Watcher
@@ -45,7 +45,7 @@ func New(path string, logger *slog.Logger) (WrapStore, error) {
 	}
 
 	s := &store{
-		wraps:   make(map[string]wrap.Wrap),
+		wraps:   make(map[string]*wrap.Wrap),
 		files:   make(map[string]string),
 		logger:  logger,
 		baseDir: absPath,
@@ -82,7 +82,7 @@ func (s *store) GetCatalog() *Catalog {
 	return s.catalog
 }
 
-func (s *store) GetWrap(name string) wrap.Wrap {
+func (s *store) GetWrap(name string) *wrap.Wrap {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 	return s.wraps[name]
@@ -125,7 +125,7 @@ func (s *store) updateFile(path string) {
 		}
 	}
 
-	s.wraps[w.Name] = *w
+	s.wraps[w.Name] = w
 	s.files[path] = w.Name
 	s.logger.Info("Loaded wrap", "name", w.Name, "path", path)
 	s.rebuildCatalog()

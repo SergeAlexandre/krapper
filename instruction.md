@@ -46,3 +46,5 @@ Small change on the returned GET .../api/v1/resources/{wrap-name} request:
 - Remove the k8s list wrapper and return a list of individual objects.
 - Remove the managedFields attribute.
 
+Small change on the wrapStore interface: Make getWrap() returning a *wrap.Wrap. And nil of wrap does not exist
+

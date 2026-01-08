@@ -48,6 +48,9 @@ source:
 	}
 
 	w := ws.GetWrap("test-wrap-1")
+	if w == nil {
+		t.Fatal("Expected wrap test-wrap-1, got nil")
+	}
 	if w.Name != "test-wrap-1" {
 		t.Errorf("Expected wrap name test-wrap-1, got %s", w.Name)
 	}
@@ -77,6 +80,9 @@ source:
 	}
 
 	w2 := ws.GetWrap("test-wrap-2")
+	if w2 == nil {
+		t.Fatal("Expected wrap test-wrap-2, got nil")
+	}
 	if w2.Name != "test-wrap-2" {
 		t.Errorf("Expected wrap name test-wrap-2, got %s", w2.Name)
 	}
@@ -99,6 +105,9 @@ source:
 
 	time.Sleep(500 * time.Millisecond)
 	w = ws.GetWrap("test-wrap-1")
+	if w == nil {
+		t.Fatal("Expected wrap test-wrap-1 to potentially be delayed, but got nil immediately?")
+	}
 	if w.Version != "v2" {
 		t.Errorf("Expected version v2, got %s", w.Version)
 	}

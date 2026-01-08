@@ -77,7 +77,7 @@ var serveCmd = &cobra.Command{
 		mux.HandleFunc("GET /api/v1/wraps/{name}", func(w http.ResponseWriter, r *http.Request) {
 			name := r.PathValue("name")
 			wrap := store.GetWrap(name)
-			if wrap.Name == "" {
+			if wrap == nil {
 				http.Error(w, "Wrap not found", http.StatusNotFound)
 				return
 			}
@@ -87,10 +87,10 @@ var serveCmd = &cobra.Command{
 			}
 		})
 
-		mux.HandleFunc("GET /api/v1/resources/{name}", func(w http.ResponseWriter, r *http.Request) {
-			name := r.PathValue("name")
+		mux.HandleFunc("GET /api/v1/resources/{wrapName}", func(w http.ResponseWriter, r *http.Request) {
+			name := r.PathValue("wrapName")
 			wrap := store.GetWrap(name)
-			if wrap.Name == "" {
+			if wrap == nil {
 				http.Error(w, "Wrap not found", http.StatusNotFound)
 				return
 			}
