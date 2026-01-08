@@ -48,3 +48,8 @@ Small change on the returned GET .../api/v1/resources/{wrap-name} request:
 
 Small change on the wrapStore interface: Make getWrap() returning a *wrap.Wrap. And nil of wrap does not exist
 
+In front folder, complete the react and primereact skeleton to build an admin like dashboard with:
+- A left menu hosting an entry per item of a catalog. Such catalog to be fetched from http://localhost:7777/api/v1/wraps
+- Leave right panel empty for the moment
+- A top banner hosting a logo on the left and on the right a 'my account' and settings logo
+  Keep it as simple as possible

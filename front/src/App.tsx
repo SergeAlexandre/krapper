@@ -1,14 +1,16 @@
-import './App.css'
-import {PrimeReactProvider} from 'primereact/api';
-import {Button} from "primereact/button";
 
+import './App.css'
+import { PrimeReactProvider } from 'primereact/api';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
-//import 'primereact/resources/themes/mdc-dark-indigo/theme.css';
+import 'primeicons/primeicons.css';
+import 'primeflex/primeflex.css';
+
+import Layout from './components/Layout';
 
 function App() {
     return (
         <PrimeReactProvider>
-            <Button>Hello</Button>
+            <Layout />
         </PrimeReactProvider>
     )
 }
