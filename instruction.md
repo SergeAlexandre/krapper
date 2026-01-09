@@ -53,3 +53,14 @@ In front folder, complete the react and primereact skeleton to build an admin li
 - Leave right panel empty for the moment
 - A top banner hosting a logo on the left and on the right a 'my account' and settings logo
   Keep it as simple as possible
+
+In the front, from the fetched catalog, For each menu entry where 'menuMode' is 'subMenu', when clicked:
+- Fetch the corresponding wrap data with http://localhost:7777/api/v1/resources/<wrapName> where wrapName is the name in the catalog entry
+- Create a sub-menu entry with the name of the fetched resource.
+Note than the back end server is running
+
+I said the fetch of resources must occurs WHEN CLICKED. Not on initial load
+
+
+
+- Fetch the corresponding wrap definition with http://localhost:7777/api/v1/wraps/<wrapName>  
