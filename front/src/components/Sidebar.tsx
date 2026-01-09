@@ -1,16 +1,7 @@
-import { useState } from 'react';
+import { useState, useCallback, useRef, memo } from 'react';
 import { PanelMenu } from 'primereact/panelmenu';
+import type { MenuItem } from 'primereact/menuitem';
 import type { CatalogItem, SelectedItem } from '../types';
-
-interface MenuItem {
-  key?: string;
-  label?: string;
-  icon?: string;
-  command?: () => void;
-  items?: MenuItem[];
-  disabled?: boolean;
-  expanded?: boolean;
-}
 
 interface SubMenuState {
   loading: boolean;
@@ -30,13 +21,15 @@ interface SidebarProps {
   onSelectItem: (item: SelectedItem) => void;
 }
 
-export function Sidebar({ catalog, onSelectItem }: SidebarProps) {
+function SidebarComponent({ catalog, onSelectItem }: SidebarProps) {
   const [subMenuState, setSubMenuState] = useState<Record<string, SubMenuState>>({});
   const [expandedKeys, setExpandedKeys] = useState<Record<string, boolean>>({});
+  const fetchingRef = useRef<Set<string>>(new Set());
 
-  const fetchSubMenuResources = async (wrapName: string) => {
-    const state = subMenuState[wrapName];
-    if (state?.loading) return;
+  const fetchSubMenuResources = useCallback(async (wrapName: string) => {
+    // Prevent duplicate fetches using ref to avoid state dependencies
+    if (fetchingRef.current.has(wrapName)) return;
+    fetchingRef.current.add(wrapName);
 
     setSubMenuState(prev => ({
       ...prev,
@@ -61,9 +54,23 @@ export function Sidebar({ catalog, onSelectItem }: SidebarProps) {
         ...prev,
         [wrapName]: { loading: false, error: errorMsg, resources: [] }
       }));
+    } finally {
+      fetchingRef.current.delete(wrapName);
     }
-  };
+  }, []);
 
+  const toggleExpand = useCallback((wrapName: string) => {
+    setExpandedKeys(prev => {
+      const isExpanding = !prev[wrapName];
+      if (isExpanding) {
+        fetchSubMenuResources(wrapName);
+      }
+      return { ...prev, [wrapName]: isExpanding };
+    });
+  }, [fetchSubMenuResources]);
+
+  // Build menu items - this will update when expandedKeys changes, but that's unavoidable
+  // for the expanded property to work correctly with PrimeReact PanelMenu
   const menuItems: MenuItem[] = catalog.map(item => {
     if (item.menuMode === 'subMenu') {
       const state = subMenuState[item.name];
@@ -79,7 +86,6 @@ export function Sidebar({ catalog, onSelectItem }: SidebarProps) {
         subItems = [{ label: 'Error loading resources', icon: 'pi pi-exclamation-triangle', disabled: true }];
       } else if (hasResources) {
         subItems = resources.map(resource => ({
-          key: `${item.name}/${resource.metadata.name}`,
           label: resource.metadata.name,
           icon: 'pi pi-file',
           command: () => onSelectItem({ wrap: item.name, resource: resource.metadata.name })
@@ -92,14 +98,8 @@ export function Sidebar({ catalog, onSelectItem }: SidebarProps) {
         key: item.name,
         label: item.label,
         icon: 'pi pi-folder',
-        expanded: expandedKeys[item.name],
-        command: () => {
-          const isExpanding = !expandedKeys[item.name];
-          setExpandedKeys(prev => ({ ...prev, [item.name]: isExpanding }));
-          if (isExpanding) {
-            fetchSubMenuResources(item.name);
-          }
-        },
+        expanded: expandedKeys[item.name] ?? false,
+        command: () => toggleExpand(item.name),
         items: subItems
       };
     }
@@ -118,3 +118,5 @@ export function Sidebar({ catalog, onSelectItem }: SidebarProps) {
     </aside>
   );
 }
+
+export const Sidebar = memo(SidebarComponent);

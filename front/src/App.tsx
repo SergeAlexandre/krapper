@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { PrimeReactProvider } from 'primereact/api';
 
 import { Header, Sidebar, MainContent } from './components';
@@ -19,13 +19,15 @@ function App() {
       .catch(err => console.error('Failed to fetch catalog:', err));
   }, []);
 
+  const wraps = useMemo(() => catalog?.wraps ?? [], [catalog]);
+
   return (
     <PrimeReactProvider>
       <div className="app-container">
         <Header />
         <div className="app-body">
           <Sidebar
-            catalog={catalog?.wraps ?? []}
+            catalog={wraps}
             onSelectItem={setSelectedItem}
           />
           <MainContent selectedItem={selectedItem} />

@@ -69,4 +69,5 @@ Make the backend resource fetching to occurs on each opening of submenu. Don't c
 
 Refactor the front code layout by using components 
 
+When groups and/or users menu are open, clicking on release generate an annoying  visual refresh. Could you managed this. 
 
