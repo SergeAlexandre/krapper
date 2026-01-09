@@ -48,3 +48,21 @@ Small change on the returned GET .../api/v1/resources/{wrap-name} request:
 
 Small change on the wrapStore interface: Make getWrap() returning a *wrap.Wrap. And nil of wrap does not exist
 
+In front folder, complete the react and primereact skeleton to build an admin like dashboard with:
+- A left menu hosting an entry per item of a catalog. Such catalog to be fetched from http://localhost:7777/api/v1/wraps
+- Leave right panel empty for the moment
+- A top banner hosting a logo on the left and on the right a 'my account' and settings logo Keep it as simple as possible
+
+For each menu entry where 'menuMode' is 'subMenu', when clicked:
+
+- Fetch the corresponding wrap data with http://localhost:7777/api/v1/resources/ where wrapName is the name in the catalog entry
+- Create a sub-menu entry with the name of the fetched resource. Use the backend server which is already running.
+
+When menuMode is 'grid', leave it as it. Will see later
+
+Uploading a screenshot, showing no menu entry.
+
+Menu item now OK. But no action when clicking on Groups entry.
+For information, I log the backend and I don't see any request to /api/v1/resources. (But I see request on /api/v1/wraps )
+
+

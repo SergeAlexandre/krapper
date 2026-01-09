@@ -6,7 +6,7 @@ version: 0.1.0
 description: Kubauth local users
 label: Users
 
-menuMode: grid # Or subMenu
+menuMode: subMenu # Or subMenu
 
 source:
   apiVersion: kubauth.kubotal.io/v1alpha1
