@@ -65,4 +65,8 @@ Uploading a screenshot, showing no menu entry.
 Menu item now OK. But no action when clicking on Groups entry.
 For information, I log the backend and I don't see any request to /api/v1/resources. (But I see request on /api/v1/wraps )
 
+Make the backend resource fetching to occurs on each opening of submenu. Don't cache resources date, as they may change.
+
+Refactor the front code layout by using components 
+
 
