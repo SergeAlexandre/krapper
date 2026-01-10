@@ -3,7 +3,7 @@
 
 
 ```
-cd back && go run ./main.go serve --wrapsFolder ../wraps
+(cd back && go run ./main.go serve --wrapsFolder ../wraps)
 
 ```
 
