@@ -1,4 +1,4 @@
-import {Toolbar} from "primereact/toolbar";
+import { Toolbar } from "primereact/toolbar";
 
 
 export function TopBanner() {

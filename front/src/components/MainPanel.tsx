@@ -1,8 +1,8 @@
-import {Button} from "primereact/button";
+import { Button } from "primereact/button";
 
 export function MainPanel() {
     return (
-        <div>
+        <div style={{ border: 'solid', width: "100%" }}>
             <Button>Hello</Button>
             Main Panel
         </div>
